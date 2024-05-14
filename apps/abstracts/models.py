@@ -7,43 +7,41 @@ from django.http import Http404
 
 
 class AbstractSoftDeleteManager(models.Manager):
-    """
-    Returns a QuerySet of objects that are currently active.
-
-    This method overrides the default get_queryset method in the Manager class.
-    It filters the QuerySet returned by the superclass's get_queryset method
-    to only include objects where the 'is_active' field is set to True.
-
-    Parameters:
-    self (AbstractSoftDeleteManager): The instance of the manager class.
-
-    Returns:
-    QuerySet: A QuerySet containing only active objects.
-    """
-
     def get_queryset(self) -> QuerySet:
+        """
+        Returns a QuerySet of objects that are currently active.
+
+        This method overrides the default get_queryset method in the Manager class.
+        It filters the QuerySet returned by the superclass's get_queryset method
+        to only include objects where the 'is_active' field is set to True.
+
+        Parameters:
+        self (AbstractSoftDeleteManager): The instance of the manager class.
+
+        Returns:
+        QuerySet: A QuerySet containing only active objects.
+        """
         return super().get_queryset().filter(is_active=True)
 
 
 class AbstractManager(models.Manager):
-    """
-    Retrieves an object by its ID.
-
-    This method attempts to retrieve an object by its ID. If the object is found, it is returned.
-    If the object does not exist or if the ID is invalid, an Http404 exception is raised.
-
-    Parameters:
-    self (AbstractManager): The instance of the manager class.
-    id (str): The ID of the object to retrieve.
-
-    Returns:
-    object: The retrieved object if found.
-
-    Raises:
-    Http404: If the object does not exist or if the ID is invalid.
-    """
-
     def get_object_by_id(self, id):
+        """
+        Retrieves an object by its ID.
+
+        This method attempts to retrieve an object by its ID. If the object is found, it is returned.
+        If the object does not exist or if the ID is invalid, an Http404 exception is raised.
+
+        Parameters:
+        self (AbstractManager): The instance of the manager class.
+        id (str): The ID of the object to retrieve.
+
+        Returns:
+        object: The retrieved object if found.
+
+        Raises:
+        Http404: If the object does not exist or if the ID is invalid.
+        """
         try:
             instance = self.get(id=id)
             return instance
