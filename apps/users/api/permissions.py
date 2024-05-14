@@ -10,20 +10,6 @@ class CreateUserPermission(permissions.BasePermission):
         return request.user and request.user.is_authenticated
 
 
-class IsTenant(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated
-            and not request.user.is_owner
-            and request.method in permissions.SAFE_METHODS
-        )
-
-
-class IsOwner(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.is_owner
-
-
 class ReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.method in permissions.SAFE_METHODS

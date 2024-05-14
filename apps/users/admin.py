@@ -6,14 +6,16 @@ from apps.users.models import User
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "is_owner",
         "username",
         "email",
         "is_active",
         "created",
         "updated",
     )
-    search_fields = ("username", "email", "is_owner")
+    search_fields = (
+        "username",
+        "email",
+    )
     ordering = ("email",)
 
 
