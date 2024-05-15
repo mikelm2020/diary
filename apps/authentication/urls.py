@@ -24,21 +24,11 @@ urlpatterns = [
     #     name="rest_resend_email",
     # ),
     # path(
-    #     "account-confirm-email/<str:key>/",
-    #     email_confirm_redirect,
-    #     name="account_confirm_email",
-    # ),
-    # path(
     #     "account-confirm-email/",
     #     VerifyEmailView.as_view(),
     #     name="account_email_verification_sent",
     # ),
     # path("password/reset/", PasswordResetView.as_view(), name="rest_password_reset"),
-    # path(
-    #     "password/reset/confirm/<str:uidb64>/<str:token>/",
-    #     password_reset_confirm_redirect,
-    #     name="password_reset_confirm",
-    # ),
     # path(
     #     "password/reset/confirm/",
     #     PasswordResetConfirmView.as_view(),

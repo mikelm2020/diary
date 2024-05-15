@@ -1,54 +1,6 @@
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 from apps.users.models import User
-
-
-class LogoutSerializer(serializers.Serializer):
-    refresh = serializers.CharField()
-    default_error_messages = {"bad_token": ("El Token ha expirado o es inválido")}
-
-    def validate(self, attrs):
-        """
-        Validate the input attributes.
-
-        This method validates the input attributes and sets the 'token' attribute to the value of the 'refresh' attribute from the input.
-
-        Args:
-        attrs (dict): A dictionary containing the input attributes.
-
-        Returns:
-        dict: The validated input attributes.
-
-        """
-        self.token = attrs["refresh"]
-        return attrs
-
-    def save(self, *args, **kwargs):
-        """
-        Blacklist the refresh token.
-
-        This method attempts to blacklist the refresh token provided in the request. If the token is valid, it is blacklisted, and if it is invalid or has expired, a TokenError is raised.
-
-        Args:
-        *args: Variable length argument list.
-        **kwargs: Arbitrary keyword arguments.
-
-        Raises:
-        TokenError: If the provided refresh token is invalid or has expired.
-
-        Returns:
-        None
-        """
-        try:
-            RefreshToken(self.token).blacklist()
-        except TokenError:
-            self.fail("bad_token")
-
-
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    pass
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -136,6 +88,32 @@ class PasswordSerializer(serializers.Serializer):
         return data
 
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150)
-    password = serializers.CharField(max_length=128, write_only=True)
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ["username", "password", "password2"]
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def validate(self, data):
+        """
+        Ensure the passwords are the same and meet any other validation criteria.
+        """
+        if data["password"] != data["password2"]:
+            raise serializers.ValidationError(
+                {"password2": "Las contraseñas no coinciden."}
+            )
+        return data
+
+    def save(self, request):
+        """
+        Create a new user instance.
+        """
+        user = User(
+            username=self.validated_data["username"],
+        )
+        password = self.validated_data["password"]
+        user.set_password(password)
+        user.save()
+        return user

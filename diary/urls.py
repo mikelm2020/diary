@@ -25,8 +25,6 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
-from apps.users.views import Login, Logout
-
 urlpatterns = [
     path("api/auth/", include("apps.authentication.urls")),
     path("admin/", admin.site.urls),
@@ -43,8 +41,6 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
-    path("login/", Login.as_view(), name="login"),
-    path("logout/", Logout.as_view(), name="logout"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
