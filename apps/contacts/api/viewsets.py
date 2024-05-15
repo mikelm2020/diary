@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from apps.contacts.api.serializers import (
     ContactListSerializer,
     ContactSerializer,
+    ContactsRegisterSerializer,
     ContactUpdateSerializer,
 )
 from apps.users.api.permissions import CreateUserPermission
@@ -16,7 +17,7 @@ from utils.pagination import ExtendedPagination
 
 class ContactViewSet(viewsets.GenericViewSet):
     serializer_class = ContactSerializer
-
+    register_serializer_class = ContactsRegisterSerializer
     list_serializer_class = ContactListSerializer
     filter_backends = [
         rest_framework.DjangoFilterBackend,
@@ -60,7 +61,7 @@ class ContactViewSet(viewsets.GenericViewSet):
         """
         return get_object_or_404(self.serializer_class.Meta.model, pk=pk)
 
-    @extend_schema(request=ContactSerializer, responses={201: None})
+    @extend_schema(request=register_serializer_class, responses={201: None})
     def create(self, request):
         """
         Create a new contact.
@@ -75,7 +76,7 @@ class ContactViewSet(viewsets.GenericViewSet):
         Raises:
         N/A
         """
-        resource_serializer = self.serializer_class(data=request.data)
+        resource_serializer = self.register_serializer_class(data=request.data)
         if resource_serializer.is_valid():
             resource_serializer.save()
             return Response(

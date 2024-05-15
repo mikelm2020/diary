@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.contacts.models import Contacts
+from apps.phones.api.serializers import PhoneRegisterSerializer
 
 
 class CustomContactSerializer(serializers.ModelSerializer):
@@ -47,34 +48,31 @@ class ContactUpdateSerializer(serializers.ModelSerializer):
         fields = ("email",)
 
 
-class ContactsRegistrationSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
+class ContactsRegisterSerializer(serializers.ModelSerializer):
+    phone = PhoneRegisterSerializer
 
     class Meta:
         model = Contacts
-        fields = ["username", "email", "password", "password2", "is_owner"]
-        extra_kwargs = {"password": {"write_only": True}}
+        fields = ["name", "last_name", "phone", "user"]
 
     def validate(self, data):
-        """
-        Ensure the passwords are the same and meet any other validation criteria.
-        """
-        if data["password"] != data["password2"]:
-            raise serializers.ValidationError(
-                {"password2": "Las contraseñas no coinciden."}
-            )
-        return data
+        if (
+            data["name"] == ""
+            or data["last_name"] == ""
+            or data["phone"] == ""
+            or data["user"] == ""
+        ):
+            raise serializers.ValidationError("Todos los campos son obligatorios")
 
     def save(self, request):
         """
-        Create a new user instance.
+        Create a new contact instance.
         """
-        user = Contacts(
-            username=self.validated_data["username"],
-            email=self.validated_data["email"],
-            is_owner=self.validated_data.get("is_owner", False),
+        contact = Contacts(
+            name=self.validated_data["name"],
+            last_name=self.validated_data["last_name"],
+            phone=self.validated_data["phone"],
+            user=request.user,
         )
-        password = self.validated_data["password"]
-        user.set_password(password)
-        user.save()
-        return user
+        contact.save()
+        return contact

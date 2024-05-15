@@ -29,6 +29,7 @@ urlpatterns = [
     path("api/auth/", include("apps.authentication.urls")),
     path("admin/", admin.site.urls),
     re_path(r"^api/", include("apps.users.api.routers"), name="users"),
+    re_path(r"^api/", include("apps.contacts.api.routers"), name="contacts"),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Optional UI:
     path(
