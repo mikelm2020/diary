@@ -4,48 +4,35 @@ from apps.contacts.models import Contacts
 from apps.phones.api.serializers import PhoneRegisterSerializer
 
 
-class CustomContactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Contacts
-        fields = ("username", "id")
-
-
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contacts
-        fields = ("username", "email", "password")
-
-        def create(self, validated_data):
-            user = Contacts(**validated_data)
-            user.set_password(validated_data["password"])
-            user.save()
-            return user
-
-    def validate_password(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError(
-                "La contraseña debe tener al menos 8 caracteres"
-            )
-        return value
+        fields = ("id", "name", "last_name", "phone", "user")
 
 
 class ContactListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contacts
-        fields = ("id", "username", "email")
+        fields = ("id", "name", "last_name", "phone", "user")
 
         def to_representation(self, instance):
             return {
                 "id": instance["id"],
-                "username": instance["username"],
-                "email": instance["email"],
+                "name": instance["name"],
+                "last_name": instance["last_name"],
+                "phone": instance["phone"],
+                "user": instance["user"],
             }
 
 
 class ContactUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contacts
-        fields = ("email",)
+        fields = (
+            "name",
+            "last_name",
+            "phone",
+        )
 
 
 class ContactsRegisterSerializer(serializers.ModelSerializer):
