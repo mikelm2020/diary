@@ -76,6 +76,12 @@ THIRD_APPS = [
     "django_filters",
     "drf_spectacular",
     "drf_standardized_errors",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
+    "phonenumber_field",
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
@@ -127,6 +133,7 @@ DATABASES = {
     }
 }
 
+SITE_ID = 1
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -186,9 +193,15 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS512",
 }
 
+REST_AUTH = {
+    "USE_JWT": True,
+    "JWT_AUTH_HTTPONLY": False,
+    # "REGISTER_SERIALIZER": "apps.users.api.serializers.UserRegistrationSerializer",
+}
+
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Rentopia API",
-    "DESCRIPTION": "API para la plataforma de alquiler de propiedades Rentopia",
+    "TITLE": "Agenda API",
+    "DESCRIPTION": "API para la Agenda",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": True,
     "COMPONENT_SPLIT_REQUEST": True,
@@ -211,6 +224,18 @@ SPECTACULAR_SETTINGS = {
         "drf_standardized_errors.openapi_hooks.postprocess_schema_enums"
     ],
 }
+
+ACCOUNT_AUTHENTICATION_METHOD = "username"
+# The user is required to hand over an e-mail address when signing up.
+ACCOUNT_EMAIL_REQUIRED = False
+
+# Determines the e-mail verification method during signup. When set to
+# "mandatory" the user is blocked from logging in until the email
+# address is verified. Choose "optional" or "none" to allow logins
+# with an unverified e-mail address. In case of "optional", the e-mail
+# verification mail is still sent, whereas in case of "none" no e-mail
+# verification mails are sent.
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
 STATIC_URL = "staticfiles/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
