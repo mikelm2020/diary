@@ -23,3 +23,6 @@ class Phones(AbstractModel):
     phone_type = models.CharField(
         max_length=2, choices=PHONE_TYPE_CHOICES, default="MO"
     )
+
+    def str(self):
+        return f"<Telefono: {self.phone}, {self.phone_type}>"

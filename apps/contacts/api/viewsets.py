@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from django_filters import rest_framework
 from drf_spectacular.utils import extend_schema
 from rest_framework import filters, status, viewsets
@@ -10,12 +9,13 @@ from apps.contacts.api.serializers import (
     ContactsRegisterSerializer,
     ContactUpdateSerializer,
 )
+from apps.contacts.models import Contacts
 from apps.users.api.permissions import CreateUserPermission
 from utils.filters import ContactFilterSet
 from utils.pagination import ExtendedPagination
 
 
-class ContactViewSet(viewsets.GenericViewSet):
+class ContactViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
     register_serializer_class = ContactsRegisterSerializer
     list_serializer_class = ContactListSerializer
@@ -29,40 +29,40 @@ class ContactViewSet(viewsets.GenericViewSet):
     ordering_fields = ("name", "last_name", "phones", "user")
     pagination_class = ExtendedPagination
     permission_classes = [CreateUserPermission]
+    queryset = Contacts.objects.filter(is_active=True)
+    # def get_queryset(self):
+    #     """
+    #     Get the queryset for the ContactViewSet.
 
-    def get_queryset(self):
-        """
-        Get the queryset for the ContactViewSet.
+    #     If the queryset is not already defined, it filters the model objects based on the 'is_active' field
+    #     and returns a queryset containing only the 'id', 'name', 'last_name', 'phones' and 'user' fields.
 
-        If the queryset is not already defined, it filters the model objects based on the 'is_active' field
-        and returns a queryset containing only the 'id', 'name', 'last_name', 'phones' and 'user' fields.
+    #     Returns:
+    #     queryset: A filtered queryset containing 'id', 'name', 'last_name', 'phones' and 'user' fields of active users.
+    #     """
+    #     if self.queryset is None:
+    #         self.queryset = self.serializer_class.Meta.model.objects.filter(
+    #             is_active=True
+    #         ).values("id", "name", "last_name", "phones", "user")
+    #         return self.queryset
 
-        Returns:
-        queryset: A filtered queryset containing 'id', 'name', 'last_name', 'phones' and 'user' fields of active users.
-        """
-        if self.queryset is None:
-            self.queryset = self.serializer_class.Meta.model.objects.filter(
-                is_active=True
-            ).values("id", "name", "last_name", "phones", "user")
-            return self.queryset
+    # def get_object(self, id):
+    #     """
+    #     Get an object by its primary key.
 
-    def get_object(self, id):
-        """
-        Get an object by its primary key.
+    #     Args:
+    #     id (int): The primary key of the object to retrieve.
 
-        Args:
-        id (int): The primary key of the object to retrieve.
+    #     Returns:
+    #     object: The object corresponding to the given primary key.
 
-        Returns:
-        object: The object corresponding to the given primary key.
-
-        Raises:
-        Http404: If no object is found with the given primary key, Http404 exception is raised.
-        """
-        return get_object_or_404(self.serializer_class.Meta.model, pk=id)
+    #     Raises:
+    #     Http404: If no object is found with the given primary key, Http404 exception is raised.
+    #     """
+    #     return get_object_or_404(self.serializer_class.Meta.model, id=id)
 
     @extend_schema(request=register_serializer_class, responses={201: None})
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         """
         Create a new contact.
 
@@ -76,19 +76,23 @@ class ContactViewSet(viewsets.GenericViewSet):
         Raises:
         N/A
         """
-        resource_serializer = self.register_serializer_class(data=request.data)
-        if resource_serializer.is_valid():
-            resource_serializer.save(request)
-            return Response(
-                {"message": "El contacto se creo correctamente!"},
-                status=status.HTTP_201_CREATED,
-            )
+
+        serializer = self.register_serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        contact = serializer.save(user=request.user)
+
+        # Asocia los teléfonos al contacto creado
+        phones_data = request.data.get("phones", [])
+        for phone_data in phones_data:
+            phone_number = phone_data["phone"]["number"]
+            phone_type = phone_data["phone_type"]
+            contact.phones.create(phone=phone_number, phone_type=phone_type)
+
+        headers = self.get_success_headers(serializer.data)
         return Response(
-            {
-                "message": "Hay errores en el registro!",
-                "errors": resource_serializer.errors,
-            },
-            status=status.HTTP_400_BAD_REQUEST,
+            {"message": "El contacto se creó correctamente."},
+            status=status.HTTP_201_CREATED,
+            headers=headers,
         )
 
     @extend_schema(
@@ -112,6 +116,13 @@ class ContactViewSet(viewsets.GenericViewSet):
         N/A
         """
         queryset = self.filter_queryset(self.get_queryset())
+
+        # Serializamos los datos y luego ajustamos el formato de los números de teléfono
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+        for item in data:
+            phones_data = item.pop("phones", [])
+            item["phone"] = [phone["phone"] for phone in phones_data]
 
         page = self.paginate_queryset(queryset)
         if page is not None:

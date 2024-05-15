@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from apps.contacts.models import Contacts
-from apps.phones.api.serializers import PhoneRegisterSerializer
+from apps.phones.api.serializers import PhoneRegisterSerializer, PhonesSerializer
 from apps.phones.models import Phones
 
 
@@ -12,18 +12,25 @@ class ContactSerializer(serializers.ModelSerializer):
 
 
 class ContactListSerializer(serializers.ModelSerializer):
+    phones = PhonesSerializer(many=True, read_only=True)
+
     class Meta:
         model = Contacts
-        fields = ("id", "name", "last_name", "phones", "user")
+        fields = ("id", "name", "last_name", "phones")
 
         def to_representation(self, instance):
-            return {
-                "id": instance["id"],
-                "name": instance["name"],
-                "last_name": instance["last_name"],
-                "phone": instance["phones"],
-                "user": instance["user"],
-            }
+            representation = super().to_representation(instance)
+            phones_data = instance.phones.all()
+            representation["phones"] = [phone.phone for phone in phones_data]
+            return representation
+
+        # def to_representation(self, instance):
+        #     return {
+        #         "id": instance["id"],
+        #         "name": instance["name"],
+        #         "last_name": instance["last_name"],
+        #         "phone": instance["phones"],
+        #     }
 
 
 class ContactUpdateSerializer(serializers.ModelSerializer):
