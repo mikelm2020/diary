@@ -81,6 +81,7 @@ THIRD_APPS = [
     "allauth.socialaccount",
     "dj_rest_auth",
     "dj_rest_auth.registration",
+    "phonenumber_field",
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
@@ -132,6 +133,7 @@ DATABASES = {
     }
 }
 
+SITE_ID = 1
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -194,7 +196,7 @@ SIMPLE_JWT = {
 REST_AUTH = {
     "USE_JWT": True,
     "JWT_AUTH_HTTPONLY": False,
-    "REGISTER_SERIALIZER": "apps.users.api.serializers.UserRegistrationSerializer",
+    # "REGISTER_SERIALIZER": "apps.users.api.serializers.UserRegistrationSerializer",
 }
 
 SPECTACULAR_SETTINGS = {

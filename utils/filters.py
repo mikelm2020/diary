@@ -6,4 +6,7 @@ from apps.users.models import User
 class UserFilterSet(rest_framework.FilterSet):
     class Meta:
         model = User
-        fields = ("username",)
+        fields = (
+            "username",
+            "email",
+        )

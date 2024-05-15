@@ -13,6 +13,7 @@ class UserManager(BaseUserManager, models.Manager):
     def _create_user(
         self,
         username,
+        email,
         password,
         is_staff,
         is_superuser,
@@ -23,6 +24,7 @@ class UserManager(BaseUserManager, models.Manager):
 
         Args:
             username (str): knick name
+            email (str): email
             password (str): password
             is_staff (bool): the user has permisssions for the admin panel?
             is_superuser (bool): the user is an admin?
@@ -35,6 +37,7 @@ class UserManager(BaseUserManager, models.Manager):
         # Create an user instance
         user = self.model(
             username=username,
+            email=email,
             is_staff=is_staff,
             is_superuser=is_superuser,
             is_active=is_active,
@@ -45,11 +48,12 @@ class UserManager(BaseUserManager, models.Manager):
         user.save(using=self.db)  # Save password encrypted
         return user
 
-    def create_user(self, username, password=None, **extra_fields):
+    def create_user(self, username, email, password=None, **extra_fields):
         """Method for create un normal user
 
         Args:
             username (_type_): _description_
+            email (_type_): _description_
             password (_type_, optional): _description_. Defaults to None.
             **extra_fields (dict): other fields
 
@@ -57,9 +61,11 @@ class UserManager(BaseUserManager, models.Manager):
         Returns:
             obj: The private method for create an user
         """
-        return self._create_user(username, password, False, False, True, **extra_fields)
+        return self._create_user(
+            username, email, password, False, False, True, **extra_fields
+        )
 
-    def create_superuser(self, username, password=None, **extra_fields):
+    def create_superuser(self, username, email, password=None, **extra_fields):
         """Method for create a super user
 
         Args:
@@ -72,4 +78,6 @@ class UserManager(BaseUserManager, models.Manager):
         Returns:
             obj: the private method for create an super user
         """
-        return self._create_user(username, password, True, True, True, **extra_fields)
+        return self._create_user(
+            username, email, password, True, True, True, **extra_fields
+        )
