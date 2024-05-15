@@ -227,7 +227,7 @@ SPECTACULAR_SETTINGS = {
 
 ACCOUNT_AUTHENTICATION_METHOD = "username"
 # The user is required to hand over an e-mail address when signing up.
-ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
 
 # Determines the e-mail verification method during signup. When set to
 # "mandatory" the user is blocked from logging in until the email
@@ -235,12 +235,25 @@ ACCOUNT_EMAIL_REQUIRED = False
 # with an unverified e-mail address. In case of "optional", the e-mail
 # verification mail is still sent, whereas in case of "none" no e-mail
 # verification mails are sent.
-ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+# <EMAIL_CONFIRM_REDIRECT_BASE_URL>/<key>
+EMAIL_CONFIRM_REDIRECT_BASE_URL = "http://localhost:3000/email/confirm/"
+
+# <PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL>/<uidb64>/<token>/
+PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = (
+    "http://localhost:3000/password-reset/confirm/"
+)
 
 STATIC_URL = "staticfiles/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_URLS = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# # Correo electrónico
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+ADMINS = [({env("ADMIN1_NAME")}, {env("ADMIN1_EMAIL")})]
 
 # Logging
 PROPAGATE = env("PROPAGATE")
