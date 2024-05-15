@@ -2,25 +2,26 @@ from rest_framework import serializers
 
 from apps.contacts.models import Contacts
 from apps.phones.api.serializers import PhoneRegisterSerializer
+from apps.phones.models import Phones
 
 
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contacts
-        fields = ("id", "name", "last_name", "phone", "user")
+        fields = ("id", "name", "last_name", "phones", "user")
 
 
 class ContactListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contacts
-        fields = ("id", "name", "last_name", "phone", "user")
+        fields = ("id", "name", "last_name", "phones", "user")
 
         def to_representation(self, instance):
             return {
                 "id": instance["id"],
                 "name": instance["name"],
                 "last_name": instance["last_name"],
-                "phone": instance["phone"],
+                "phone": instance["phones"],
                 "user": instance["user"],
             }
 
@@ -31,35 +32,38 @@ class ContactUpdateSerializer(serializers.ModelSerializer):
         fields = (
             "name",
             "last_name",
-            "phone",
+            "phones",
         )
 
 
 class ContactsRegisterSerializer(serializers.ModelSerializer):
-    phone = PhoneRegisterSerializer
+    phones = PhoneRegisterSerializer(many=True)
 
     class Meta:
         model = Contacts
-        fields = ["name", "last_name", "phone", "user"]
+        fields = ["name", "last_name", "phones"]
 
     def validate(self, data):
-        if (
-            data["name"] == ""
-            or data["last_name"] == ""
-            or data["phone"] == ""
-            or data["user"] == ""
-        ):
+        if data["name"] == "" or data["last_name"] == "" or data["phones"] == "":
             raise serializers.ValidationError("Todos los campos son obligatorios")
+        return data
 
     def save(self, request):
         """
         Create a new contact instance.
         """
-        contact = Contacts(
+        print(f"Validated_data: {self.validated_data} ")
+        print(f"usuario: {request.user.username}")
+        contact = Contacts.objects.create(
             name=self.validated_data["name"],
             last_name=self.validated_data["last_name"],
-            phone=self.validated_data["phone"],
             user=request.user,
         )
-        contact.save()
+
+        for phone_data in self.validated_data["phones"]:
+            print(f"phone_data: {phone_data} ")
+            print(f"phones validated_data: {self.validated_data['phones']}")
+            phone_number = phone_data["phone"]["number"]
+            phone_type = phone_data["phone_type"]
+            Phones.objects.create(phone=phone_number, phone_type=phone_type)
         return contact
