@@ -76,6 +76,8 @@ THIRD_APPS = [
     "django_filters",
     "drf_spectacular",
     "drf_standardized_errors",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
@@ -186,9 +188,15 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS512",
 }
 
+REST_AUTH = {
+    "USE_JWT": True,
+    "JWT_AUTH_HTTPONLY": False,
+    # "REGISTER_SERIALIZER": "apps.users.api.serializers.UserRegistrationSerializer",
+}
+
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Rentopia API",
-    "DESCRIPTION": "API para la plataforma de alquiler de propiedades Rentopia",
+    "TITLE": "Agenda API",
+    "DESCRIPTION": "API para la Agenda",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": True,
     "COMPONENT_SPLIT_REQUEST": True,

@@ -54,13 +54,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "id")
+        fields = "username"
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "email", "password")
+        fields = ("username", "password")
 
         def create(self, validated_data):
             user = User(**validated_data)
@@ -91,20 +91,19 @@ class UserSerializer(serializers.ModelSerializer):
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "username", "email")
+        fields = ("id", "username")
 
         def to_representation(self, instance):
             return {
                 "id": instance["id"],
                 "username": instance["username"],
-                "email": instance["email"],
             }
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("email",)
+        fields = ("username",)
 
 
 class PasswordSerializer(serializers.Serializer):
@@ -135,3 +134,8 @@ class PasswordSerializer(serializers.Serializer):
                 {"password_confirm": "Ambas contraseñas deben ser iguales"}
             )
         return data
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(max_length=128, write_only=True)

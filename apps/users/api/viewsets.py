@@ -45,7 +45,7 @@ class UserViewSet(viewsets.GenericViewSet):
         if self.queryset is None:
             self.queryset = self.serializer_class.Meta.model.objects.filter(
                 is_active=True
-            ).values("id", "username", "email")
+            ).values("id", "username")
             return self.queryset
 
     def get_object(self, pk):

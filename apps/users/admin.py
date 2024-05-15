@@ -7,16 +7,12 @@ class UserAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "username",
-        "email",
         "is_active",
         "created",
         "updated",
     )
-    search_fields = (
-        "username",
-        "email",
-    )
-    ordering = ("email",)
+    search_fields = ("username",)
+    ordering = ("username",)
 
 
 admin.site.register(User, UserAdmin)
