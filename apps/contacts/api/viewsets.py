@@ -79,7 +79,13 @@ class ContactViewSet(viewsets.ModelViewSet):
 
         serializer = self.register_serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        contact = serializer.save(user=request.user)
+
+        # Addes the user to data dictionary
+        data = serializer.validated_data
+        data["user"] = request.user
+
+        # Save the contacr and associate the phones
+        contact = serializer.save()
 
         # Asocia los teléfonos al contacto creado
         phones_data = request.data.get("phones", [])
@@ -115,21 +121,21 @@ class ContactViewSet(viewsets.ModelViewSet):
         Raises:
         N/A
         """
-        queryset = self.filter_queryset(self.get_queryset())
+        # queryset = self.filter_queryset(self.get_queryset())
 
         # Serializamos los datos y luego ajustamos el formato de los números de teléfono
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = self.list_serializer_class(self.queryset, many=True)
         data = serializer.data
         for item in data:
             phones_data = item.pop("phones", [])
             item["phone"] = [phone["phone"] for phone in phones_data]
 
-        page = self.paginate_queryset(queryset)
+        page = self.paginate_queryset(self.queryset)
         if page is not None:
             serializer = self.list_serializer_class(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = self.list_serializer_class(queryset, many=True)
+        serializer = self.list_serializer_class(self.queryset, many=True)
         return Response(serializer.data)
 
     @extend_schema(description="Obtiene el detalle de un contacto", summary="Contacts")

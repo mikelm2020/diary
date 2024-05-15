@@ -5,11 +5,11 @@ from apps.phones.models import Phones
 
 
 class PhoneNumberSerializer(serializers.Serializer):
-    number = PhoneNumberField(region="MX")
+    phone = PhoneNumberField(region="MX")
 
 
 class PhonesSerializer(serializers.ModelSerializer):
-    phone = PhoneNumberSerializer()
+    phone = PhoneNumberField(region="MX")
 
     class Meta:
         model = Phones

@@ -55,16 +55,15 @@ class ContactsRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Todos los campos son obligatorios")
         return data
 
-    def save(self, request):
+    def save(self):
         """
         Create a new contact instance.
         """
         print(f"Validated_data: {self.validated_data} ")
-        print(f"usuario: {request.user.username}")
         contact = Contacts.objects.create(
             name=self.validated_data["name"],
             last_name=self.validated_data["last_name"],
-            user=request.user,
+            user=self.validated_data["user"],
         )
 
         for phone_data in self.validated_data["phones"]:
