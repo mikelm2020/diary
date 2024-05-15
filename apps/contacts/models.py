@@ -14,7 +14,7 @@ from apps.users.models import User
 
 class Contacts(AbstractModel):
     name = models.CharField(max_length=50, blank=False, null=False)
-    last_nmae = models.CharField(max_length=50, blank=False, null=False)
+    last_name = models.CharField(max_length=50, blank=False, null=False)
     company = models.CharField(max_length=50, blank=True, null=True)
     phones = models.ManyToManyField(Phones, blank=False)
     emails = models.ManyToManyField(Emails, blank=True)

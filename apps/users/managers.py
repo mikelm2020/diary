@@ -62,7 +62,7 @@ class UserManager(BaseUserManager, models.Manager):
             obj: The private method for create an user
         """
         return self._create_user(
-            username, email, password, False, False, True, **extra_fields
+            username, email, password, False, False, False, **extra_fields
         )
 
     def create_superuser(self, username, email, password=None, **extra_fields):
