@@ -28,12 +28,6 @@ class PhoneRegisterSerializer(serializers.ModelSerializer):
         new_phone = Phones.objects.create(**self.validated_data)
         return new_phone
 
-    # def validate_phone(self, value):
-    #     print(f"Valor: {value} ")
-    #     if Phones.objects.filter(phone=value).exists():
-    #         raise serializers.ValidationError("El teléfono ya existe")
-    #     return value
-
 
 class PhoneListSerializer(serializers.ModelSerializer):
     class Meta:
