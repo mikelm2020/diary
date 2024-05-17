@@ -75,7 +75,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://raw.githubusercontent.com/mikelm2020/diary/main/assets/agenda_api.png)
+![Product Name Screen Shot](https://raw.githubusercontent.com/mikelm2020/diary/main/assets/agenda_api.png)
 
 This is a personal project of backend for a diary
 
