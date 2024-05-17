@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import OpenApiExample, extend_schema
 from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
 
@@ -32,7 +32,42 @@ class ContactViewSet(viewsets.ModelViewSet):
     permission_classes = [CreateUserPermission]
     queryset = Contacts.objects.filter(is_active=True)
 
-    @extend_schema(request=ContactsRegisterSerializer, responses={201: None})
+    @extend_schema(
+        request=ContactsRegisterSerializer,
+        responses={201: None},
+        examples=[
+            OpenApiExample(
+                "Example Value Schemma",
+                description="Request Body",
+                value={
+                    "name": "Geronimo",
+                    "last_name": "Valtierra",
+                    "company": "Industrias Futura SA de CV",
+                    "phones": [
+                        {"phone": "+5215578906715", "phone_type": "MO"},
+                        {"phone": "+5215566907612", "phone_type": "WO"},
+                    ],
+                    "emails": [
+                        {"email": "geronimo.val@futura.com", "email_type": "MA"}
+                    ],
+                    "address": [{"address": "Calle 123", "address_type": "MA"}],
+                    "website": "url",
+                    "important_dates": [
+                        {
+                            "important_date": "2021-01-01",
+                            "important_date_type": "MA",
+                        }
+                    ],
+                    "related_persons": [
+                        {"name": "Alicia", "related_person_type": "AS"}
+                    ],
+                    "sip": "sip",
+                    "notes": "",
+                    "tags": [{"tag": "CU"}],
+                },
+            ),
+        ],
+    )
     def perform_create(self, serializer):
         """
         Create a new contact.
@@ -50,7 +85,7 @@ class ContactViewSet(viewsets.ModelViewSet):
         serializer = ContactsRegisterSerializer(data=self.request.data)
         if serializer.is_valid():
             serializer.save(user=self.request.user)
-            print(f"El serializer es: {serializer}")
+
         else:
             return Response(
                 {"message": "Ocurrieron errores!", "error": serializer.errors},
@@ -80,7 +115,6 @@ class ContactViewSet(viewsets.ModelViewSet):
         queryset = Contacts.objects.filter(user=request.user, is_active=True)
         serializer = self.list_serializer_class(queryset, many=True)
         data = serializer.data
-        print(f"Datos serializados en List: {serializer.data} ")
 
         for item in data:
             phones_data = item.pop("phones", [])
@@ -154,17 +188,12 @@ class ContactViewSet(viewsets.ModelViewSet):
         """
         queryset = Contacts.objects.filter(user=request.user, is_active=True)
         contact = get_object_or_404(queryset, pk=pk)
-        resource_destroy = self.get_serializer(contact).update(is_active=False)
-        # resource_destroy = self.serializer_class.Meta.model.objects.filter(
-        #     pk=pk
-        # ).update(is_active=False)
-        if resource_destroy == 1:
-            return Response(
-                {"message": "Usuario eliminado correctamente!"},
-                status=status.HTTP_200_OK,
-            )
+        # Desactivar el contacto (marcarlo como inactivo)
+        contact.is_active = False
+        contact.save()
+
         return Response(
-            {"message": "El contacto no existe!"}, status=status.HTTP_404_NOT_FOUND
+            {"message": "Contacto eliminado correctamente!"}, status=status.HTTP_200_OK
         )
 
     @extend_schema(
@@ -210,8 +239,8 @@ class ContactViewSet(viewsets.ModelViewSet):
         # Associates the address to created contact
         addresses_data = request.data.get("address", [])
         for address_data in addresses_data:
-            address = phone_data["address"]
-            address_type = phone_data["address_type"]
+            address = address_data["address"]
+            address_type = address_data["address_type"]
             contact.address.create(address=address, address_type=address_type)
 
         # Associates the important_dates to created contact
