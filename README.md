@@ -8,8 +8,6 @@
 *** Thanks again! Now go create something AMAZING! :D
 -->
 
-
-
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
@@ -25,13 +23,11 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/mikelm2020/diary">
-    <img src="https://github.com/mikelm2020/diary/blob/961be498851fc7b1e9d940550e7eb54ea3b2130f/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/mikelm2020/diary/main/assets/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">diary</h3>
@@ -49,8 +45,6 @@
     <a href="https://github.com/mikelm2020/diary/issues">Request Feature</a>
   </p>
 </div>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -78,12 +72,10 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://github.com/mikelm2020/diary/blob/82a8c694a418723faacf992c5dd76b6e328120f8/api_playlists.png)
+[![Product Name Screen Shot][product-screenshot]](https://raw.githubusercontent.com/mikelm2020/diary/main/assets/agenda_api.png)
 
 This is a personal project of backend for a diary
 
@@ -98,14 +90,9 @@ In this project the objetives are:
 * Create the REST API for CRUD operations through Django Rest Framework
 * Use Swagger for document the REST API
 
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 ### Built With
-
-
 
 * [![Python][Python]][Python-url]
 * [![Django][Django]][Django-url]
@@ -114,24 +101,16 @@ In this project the objetives are:
 * [![JWT][JWT]][JWT-url]
 * [![Postgres][Postgres]][Postgres-url]
 
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
 
 ### Prerequisites
 
 This project use a postgreSQL local database.
 
-
-
-
 ### Installation
-
 
 1. Clone the repository
    ```sh
@@ -165,7 +144,6 @@ The indications for use the API are:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 See the [open issues](https://github.com/mikelm2020/diary/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -177,16 +155,12 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- CONTACT -->
 ## Contact
 
 Miguel Angel López Monroy - [@miguellopezmdev](https://twitter.com/miguellopezmdev) - miguel.lopezm.dev@gmail.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
@@ -204,8 +178,6 @@ My favorite resources used:
 * [Blog Developer.pe](http://www.developerpe.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
@@ -234,4 +206,3 @@ My favorite resources used:
 [JWT-url]: https://jwt.io/
 [Postgres]: https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white
 [Postgres-url]: https://www.postgresql.org/
-
