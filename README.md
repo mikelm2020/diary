@@ -31,7 +31,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/mikelm2020/diary">
-    <img src="https://github.com/mikelm2020/diary/blob/961be498851fc7b1e9d940550e7eb54ea3b2130f/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/mikelm2020/diary/main/assets/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">diary</h3>
@@ -83,7 +83,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://github.com/mikelm2020/diary/blob/82a8c694a418723faacf992c5dd76b6e328120f8/api_playlists.png)
+[![Product Name Screen Shot][product-screenshot]](https://raw.githubusercontent.com/mikelm2020/diary/main/assets/agenda_api.png)
 
 This is a personal project of backend for a diary
 
